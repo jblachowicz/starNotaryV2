@@ -2,21 +2,24 @@ const StarNotary = artifacts.require("StarNotary");
 
 var accounts;
 var owner;
+let instance;
 
 contract('StarNotary', (accs) => {
     accounts = accs;
     owner = accounts[0];
 });
 
+before(async () => {
+    instance = await StarNotary.deployed();
+});
+
 it('can Create a Star', async() => {
     let tokenId = 1;
-    let instance = await StarNotary.deployed();
     await instance.createStar('Awesome Star!', tokenId, {from: accounts[0]})
     assert.equal(await instance.tokenIdToStarInfo.call(tokenId), 'Awesome Star!')
 });
 
 it('lets user1 put up their star for sale', async() => {
-    let instance = await StarNotary.deployed();
     let user1 = accounts[1];
     let starId = 2;
     let starPrice = web3.utils.toWei(".01", "ether");
@@ -26,7 +29,6 @@ it('lets user1 put up their star for sale', async() => {
 });
 
 it('lets user1 get the funds after the sale', async() => {
-    let instance = await StarNotary.deployed();
     let user1 = accounts[1];
     let user2 = accounts[2];
     let starId = 3;
@@ -43,7 +45,6 @@ it('lets user1 get the funds after the sale', async() => {
 });
 
 it('lets user2 buy a star, if it is put up for sale', async() => {
-    let instance = await StarNotary.deployed();
     let user1 = accounts[1];
     let user2 = accounts[2];
     let starId = 4;
@@ -57,7 +58,6 @@ it('lets user2 buy a star, if it is put up for sale', async() => {
 });
 
 it('lets user2 buy a star and decreases its balance in ether', async() => {
-    let instance = await StarNotary.deployed();
     let user1 = accounts[1];
     let user2 = accounts[2];
     let starId = 5;
@@ -83,7 +83,6 @@ it('lets user2 buy a star and decreases its balance in ether', async() => {
 });
 
 it('check name of a star by tokenId', async() => {
-    let instance = await StarNotary.deployed();
     let user1 = accounts[1];
     let user2 = accounts[2];
     let starId = 6;
@@ -93,7 +92,6 @@ it('check name of a star by tokenId', async() => {
 });
 
 it('lets user1 exchange star with user2 ', async() => {
-    let instance = await StarNotary.deployed();
     let user1 = accounts[1];
     let user2 = accounts[2];
     let firstStarId = 10;
@@ -106,7 +104,6 @@ it('lets user1 exchange star with user2 ', async() => {
 });
 
 it('lets user1 transfer star to user2 ', async() => {
-    let instance = await StarNotary.deployed();
     let user1 = accounts[1];
     let user2 = accounts[2];
     let starId = 12;
@@ -116,7 +113,6 @@ it('lets user1 transfer star to user2 ', async() => {
 });
 
 it('check name and symbol', async() => {
-    let instance = await StarNotary.deployed();
     assert.equal(await instance.name(), 'TREASURE')
     assert.equal(await instance.symbol(), 'JB')
 });
